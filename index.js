@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 require("dotenv").config();
-const app = require("express");
+const express = require("express");
+const app = express();
 const cors = require("cors");
 
 /* DB CONFIGURATION & CONNECTION */
@@ -23,6 +24,7 @@ connection.connect((err) => {
 /* MIDDLEWARE */
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/api/weather", (req, res) => {
   connection.query("SELECT * FROM `weather`", (error, results, fields) => {
