@@ -1,6 +1,9 @@
 const mysql = require("mysql");
 require("dotenv").config();
-console.log(process.env);
+const app = require("express");
+const cors = require("cors");
+
+/* DB CONFIGURATION & CONNECTION */
 
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST,
@@ -15,4 +18,21 @@ connection.connect((err) => {
     return;
   }
   console.log(`connected as id ${connection.threadId}`);
+});
+
+/* MIDDLEWARE */
+
+app.use(express.json());
+
+app.get("/api/weather", (req, res) => {
+  connection.query("SELECT * FROM `weather`", (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+    console.log(fields);
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`server running on port ${PORT}`);
 });
