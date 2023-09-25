@@ -51,6 +51,35 @@ app.get("/api/weather", (req, res) => {
   });
 });
 
+app.post("/api/weather", (req, res) => {
+  const body = req.body;
+
+  if (!body.temp || body.hum || body.pres) {
+    return res.status(400).json({
+      error: "malformed request",
+    });
+  }
+
+  const weatherStatus = {
+    ...body,
+  };
+  console.log(JSON.stringify(weatherStatus));
+
+  pool.getConnection((err, connection) => {
+    if (err) throw err;
+
+    connection.query(
+      "INSERT INTO `weather` SET ?",
+      weatherStatus,
+      (error, results) => {
+        res.json(results);
+        if (error) throw error;
+        connection.release();
+      }
+    );
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
