@@ -54,7 +54,7 @@ app.get("/api/weather", (req, res) => {
 app.post("/api/weather", (req, res) => {
   const body = req.body;
 
-  if (!body.temp || body.hum || body.pres) {
+  if (!body.temp || !body.hum || !body.pres) {
     return res.status(400).json({
       error: "malformed request",
     });
